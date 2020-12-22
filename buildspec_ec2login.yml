@@ -1,0 +1,21 @@
+version: 0.2
+env:
+  parameter-store:
+    KEYPAIR: "KEYPAIR"
+phases:
+  pre_build:
+    commands:
+      - ls -al
+      - echo $KEYPAIR > new.txt
+      - cat new.txt
+      - ssh -i new.txt user@ip #using pem file stored in s3
+      - shh user@ip #if password less
+      - ls -al
+      - docker ps
+      - docker images
+      - docker login -u guruvamsi -p Mydhoni@07
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push $IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker pull $IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker run -d --name front -p 80:80 guruvamsi/cicdpoc:latest
